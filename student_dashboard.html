@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Book Purchases</title>
+<style>
+  body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+/* Navigation bar */
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f2f2f2;
+}
+
+.navbar h1 {
+  margin: 0;
+}
+
+.navbar img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+/* Search form */
+#searchForm {
+  margin-top: 80px; /* Adjusted to move the search form below the navbar */
+  text-align: center;
+}
+
+#searchForm input[type="text"],
+#searchForm button {
+  margin: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#searchForm button {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+/* Book containers */
+.book-container {
+  width: 200px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+  display: inline-block;
+  align-items: center;
+}
+
+.book-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+.book-details {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.buy-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Popup */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  color: #fff;
+  border-radius: 5px;
+  display: none;
+  z-index: 999;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Navigation bar -->
+<div class="navbar">
+  <img src="user.png" alt="User Icon" onclick="logout.confirmLogout()">
+  <h1>Library Catalogue</h1>
+  <div class="cart-logo" onclick="cart.displayItems()">
+  <img src="cart1.png" alt="Cart Icon">
+  </div>
+</div>
+
+<!-- Search form -->
+<form id="searchForm">
+  <input type="text" id="titleQuery" placeholder="Search by Title">
+  <input type="text" id="authorQuery" placeholder="Search by Author">
+  <input type="text" id="isbnQuery" placeholder="Search by ISBN">
+  <input type="text" id="genreQuery" placeholder="Search by Genre">
+  <button type="submit" onclick="searchBooks()">Search</button>
+</form>
+
+<!-- Book containers -->
+<div class="book-container">
+  <img src="book1.jpg" alt="Book 1" class="book-image">
+  <div class="book-details">
+    <h3>Title: That Thriller Night</h3>
+    <p>Author: NIBEDITA DAS</p>
+    <p>Genre: Mystery</p>
+    <!-- <p>Price: Rs.120</p> -->
+    <p>ISBN: 123456789</p>
+  </div>
+  <button class="buy-button" onclick="book1.buyBook()">Buy</button>
+</div>
+<div class="book-container">
+    <img src="book2.jpg" alt="Book 2" class="book-image">
+    <div class="book-details">
+      <h3>Title: The girl on the Train</h3>
+      <p>Author: RUSKIN BOND</p>
+      <p>Genre: Fiction</p>
+      <!-- <P>Price: Rs.180</P> -->
+      <p>ISBN: 987654321</p>
+    </div>
+    <button class="buy-button" onclick="book2.buyBook()">Buy</button>   
+  </div>
+  <div class="book-container">
+    <img src="book3.jpg" alt="Book 3" class="book-image">
+    <div class="book-details">
+      <h3>Title: Be My Perfect Ending</h3>
+      <p>Author: John Doe</p>
+      <p>Genre: Spy</p>
+      <!-- <P>Price: Rs.220</P> -->
+      <p>ISBN: 678912345</p>
+    </div>
+    <button class="buy-button" onclick="book3.buyBook()">Buy</button>
+  </div>
+  <div class="book-container">
+    <img src="book7.jpg" alt="Book 4" class="book-image">
+    <div class="book-details">
+      <h3>Title: The Queen Of Nothing</h3>
+      <p>Author: John Doe</p>
+      <p>Genre: Crime</p>
+      <!-- <P>Price: Rs.201</P> -->
+      <p>ISBN: 234567891</p>
+    </div>
+    <button class="buy-button" onclick="book4.buyBook()">Buy</button>
+  </div>
+  <div class="book-container">
+    <img src="book5.jpg" alt="Book 5" class="book-image">
+    <div class="book-details">
+      <h3>Title: Programming with Java</h3>
+      <p>Author: Author 5</p>
+      <p>Genre: Programming</p>
+      <!-- <P>Price: Rs.2020</P> -->
+      <p>ISBN: ISBN5</p>
+    </div>
+    <button class="buy-button" onclick="book5.buyBook()">Buy</button>
+  </div>
+  <!-- <div class="book-container">
+    <img src="book6.jpg" alt="Book 6" class="book-image">
+    <div class="book-details">
+      <h3>Title: 500 Recipes</h3>
+      <p>Author: KAVITHA DEVAGAN</p>
+      <p>Genre: Cooking</p>
+      <P>Price: Rs.520</P>
+      <p>ISBN: 456789321</p>
+    </div>
+    <button class="buy-button" onclick="book6.buyBook()">Buy</button>
+  </div> -->
+
+<!-- Popup message -->
+<div id="popup" class="popup"></div>
+
+<script>
+  class Book {
+    constructor(title) {
+      this.title = title;
+    }
+
+    buyBook() {
+      popup.showMessage(`Book named ${this.title} purchased`);
+      cart.addItem(this.title);
+    }
+  }
+
+  class Cart {
+    constructor() {
+      this.items = [];
+    }
+
+    addItem(title) {
+      this.items.push(title);
+    }
+
+    removeItem(title) {
+      const index = this.items.indexOf(title);
+      if (index !== -1) {
+        this.items.splice(index, 1);
+      }
+    }
+
+    displayItems() {
+      popup.showItems(this.items);
+    }
+
+    confirmReturn(title) {
+      if (confirm(`Are you sure you want to return ${title}?`)) {
+        this.removeItem(title);
+        popup.showMessage(`${title} returned`);
+        popup.showItems(this.items);
+      }
+    }
+  }
+
+  class Popup {
+    showMessage(message) {
+      const popup = document.getElementById('popup');
+      popup.textContent = message;
+      popup.style.display = 'block';
+      setTimeout(() => {
+        popup.style.display = 'none';
+      }, 2000); // Hide popup after 2 seconds
+    }
+
+    showItems(items) {
+      const popup = document.getElementById('popup');
+      popup.innerHTML = '<h2>Purchased Items</h2>';
+      if (items.length === 0) {
+        popup.innerHTML += '<p>No items in the cart</p>';
+      } else {
+        items.forEach(item => {
+          popup.innerHTML += `<p>${item} <button onclick="cart.confirmReturn('${item}')">Return</button></p>`;
+        });
+      }
+      popup.style.display = 'block';
+    }
+  }
+
+  class Logout {
+    confirmLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        alert('Logout successful');
+        // Redirect to homepage
+        window.location.href = 'homepage.html';
+      }
+    }
+  }
+
+  function searchBooks() {
+    const titleQuery = document.getElementById('titleQuery').value.trim();
+    const authorQuery = document.getElementById('authorQuery').value.trim();
+    const isbnQuery = document.getElementById('isbnQuery').value.trim();
+    const genreQuery = document.getElementById('genreQuery').value.trim();
+
+    let found = false;
+    if (titleQuery || authorQuery || isbnQuery || genreQuery) {
+      // Check if any book matches the search criteria
+      const books = [book1, book2, book3, book4, book5, book6];
+      books.forEach(book => {
+        if (
+          (titleQuery && book.title.toLowerCase().includes(titleQuery.toLowerCase())) ||
+          (authorQuery && book.author.toLowerCase().includes(authorQuery.toLowerCase())) ||
+          (isbnQuery && book.isbn.toLowerCase().includes(isbnQuery.toLowerCase())) ||
+          (genreQuery && book.genre.toLowerCase().includes(genreQuery.toLowerCase()))
+        ) {
+          found = true;
+        }
+      });
+    }
+  }
+
+  const book1 = new Book('That Thriller Night');
+  book1.author = 'NIBEDITA DAS';
+  book1.genre = 'Mystery';
+  book1.isbn = '123456789';
+
+  const book2 = new Book('The girl on the Train');
+  book2.author = 'RUSKIN BOND';
+  book2.genre = 'Fiction';
+  book2.isbn = '987654321';
+
+  const book3 = new Book('Be my perfect Ending');
+  book3.author = 'John Doe';
+  book3.genre = 'Spy';
+  book3.isbn = '678912345';
+
+  const book4 = new Book('The Queen Of Nothing');
+  book4.author = 'John Doe';
+  book4.genre = 'Crime';
+  book4.isbn = '234567891';
+
+  const book5 = new Book('Programming with Java');
+  book5.author = 'E.BALAGURUSWAMY';
+  book5.genre = 'Programming';
+  book5.isbn = '345678912';
+
+  const book6 = new Book('500 Recipes');
+  book6.author = 'KAVITHA DEVAGAN';
+  book6.genre = 'Cooking';
+  book6.isbn = '456789321';
+
+  const cart = new Cart();
+  const popup = new Popup();
+  const logout = new Logout();
+</script>
+
+</body>
+</html>

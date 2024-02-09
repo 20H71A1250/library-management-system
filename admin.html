@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  form {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  input[type="text"], input[type="password"], button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+  }
+
+  button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+</style>
+</head>
+<body>
+
+<form id="loginForm">
+  <h2>Admin Login</h2>
+  <label for="email">Email:</label>
+  <input type="text" id="email" name="email" required><br>
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" name="password" required><br>
+
+  <button type="submit">Login</button>
+</form>
+
+<script>
+  // Event listener for form submission
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get the email and password entered by the user
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    // Check if the email and password are correct
+    if (email === 'admin@example.com' && password === 'admin123') {
+      // Store the email in local storage to remember the login
+      localStorage.setItem('adminEmail', email);
+      // Redirect to admin dashboard page
+      window.location.href = 'admin_dashboard.html';
+    } else {
+      // Show error message if login fails
+      alert('Invalid email or password. Please try again.');
+      alert('Only administrators can access this page.')
+    }
+  });
+</script>
+
+</body>
+</html>
